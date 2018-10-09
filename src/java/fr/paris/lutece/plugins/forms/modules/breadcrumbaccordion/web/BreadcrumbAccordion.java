@@ -128,7 +128,7 @@ public class BreadcrumbAccordion implements IBreadcrumb
         model.put( MARK_LIST_STEP_COMPLETED, createStepDisplays( request, listValidatedStep, formResponseManager ) );
         model.put( MARK_CURRENT_STEP, stepCurrent );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_BREADCRUMB_TOP_HTML, I18nService.getDefaultLocale( ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_BREADCRUMB_TOP_HTML, request.getLocale( ), model );
 
         return template.getHtml( );
     }
@@ -167,7 +167,7 @@ public class BreadcrumbAccordion implements IBreadcrumb
         model.put( MARK_LIST_STEP_TO_COMPLETE, listNotCompletedStep );
         model.put( MARK_CURRENT_STEP_INDEX, nCurrentStepIndex );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_BREADCRUMB_BOTTOM_HTML, I18nService.getDefaultLocale( ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_BREADCRUMB_BOTTOM_HTML, request.getLocale( ), model );
 
         return template.getHtml( );
     }
