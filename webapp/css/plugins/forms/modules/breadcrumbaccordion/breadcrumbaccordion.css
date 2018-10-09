@@ -1,0 +1,25 @@
+#breadcrumb-accordion-top .panel-heading {
+    border-top: 1px solid #ddd;
+}
+
+.step-number.step-to-complete, .step-number.step-current, .step-number.step-completed {
+	display: inline-block;
+    width: 35px;
+    height: 35px;
+    color: #0C518A;
+    border: 2px solid #0C518A;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 31px;
+    font-size: 1.3em;
+    margin: 0 20px 0 0;
+}
+
+.step-number.step-to-complete, .step-number.step-current, {
+    font-family: "Montserrat-Bold"; 
+}
+
+.step-number.step-completed {
+    color: #ffffff;
+    background: #0C518A;
+}

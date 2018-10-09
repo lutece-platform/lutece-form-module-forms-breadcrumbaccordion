@@ -1,0 +1,9 @@
+<#if list_step_to_complete?has_content>
+  <div id="breadcrumb-accordion-bottom" class="panel panel-default">
+    <#list list_step_to_complete as step>
+    <div class="panel-heading">
+      <h3 class="panel-title"><span class="step-number step-to-complete">${current_step_index + step?index + 1}</span> ${step.title}</h3>
+    </div>
+    </#list>
+  </div>
+</#if>

@@ -1,0 +1,22 @@
+<#if list_step_completed?has_content>
+  <div id="breadcrumb-accordion-top" class="panel panel-default">
+    <#list list_step_completed as stepDisplay>
+      <#assign step = stepDisplay.step/>
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="fa fa-check step-number step-completed"></span> ${step.title}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <#list stepDisplay.questionHtml as questionHtml>
+              ${questionHtml}
+            </#list>
+          </div>
+          <div class="col-sm-6">
+            <a class="btn btn-primary pull-right" href="jsp/site/Portal.jsp?page=forms&view=getStep&id_form=${step.idForm}&index_step=${stepDisplay?index}">#i18n{module.forms.breadcrumbaccordion.xpage.step.button.modify}</a>
+          </div>
+        </div>
+      </div>
+    </#list>
+  </div>
+</#if>

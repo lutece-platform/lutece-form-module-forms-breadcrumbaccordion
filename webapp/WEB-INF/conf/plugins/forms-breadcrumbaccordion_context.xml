@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
+
+    <!-- Services -->
+    <bean id="forms-breadcrumbaccordion.breadcrumbAccordionService" class="fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.service.BreadcrumbAccordionService" />
+
+    <!-- DAO -->
+    <bean id="forms-breadcrumbaccordion.breadcrumbAccordionDAO" class="fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.BreadcrumbAccordionDAO" />
+
+	<!--  BreadcrumbAccordion -->
+	<bean id="forms-breadcrumbaccordion.breadcrumbAccordion" class="fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.web.BreadcrumbAccordion">
+    	<constructor-arg type="java.lang.String" index="0" value="forms-breadcrumbaccordion.breadcrumbAccordion" />
+    	<constructor-arg type="java.lang.String" index="1" value="module.forms.breadcrumbaccordion.breadcrumb.accordion.name" />
+	</bean>
+
+</beans>
