@@ -6,13 +6,18 @@
     <body>
         <section name="Module forms breadcrumb accordion">
             <subsection name="Introduction">
-                <p></p>
+                <p>Ce module permet d'avoir un fil d'ariane en accordéon dans le <em>plugin-forms</em>.</p>
+                <p><img src="images/BreadcrumAccordion_presentation.png" /></p>
             </subsection>
             <subsection name="Configuration">
-                <p></p>
-            </subsection>
-            <subsection name="Usage">
-                <p></p>
+                <p><strong>Note :</strong> Pour pouvoir configurer le fil d'ariane en accordéon, il faut d'abord que le formulaire soit configuré pour utiliser le fil d'ariane en accordéon.</p>
+                <p>Le menu d'administration <strong>Configuration du fil d'ariane en accordéon</strong> permet de gérer les fils d'ariane en accordéon.</p>
+                <p><img src="images/BreadcrumAccordion_manage.png" /></p>
+                <p>Seuls les formulaires utilisant le fil d'ariane en accordéon sont listés dans cette page. La colonne <strong>Configuré ?</strong> permet de savoir si une configuration existe pour le formulaire.</p>
+                <p>Le bouton d'action <strong>Modifier la configuration du fil d'ariane en accordéon</strong> permet de modifier la configuration du fil d'ariane.</p>
+                <p><img src="images/BreadcrumAccordion_modify.png" /></p>
+                <p>Dans cette page, il faut sélectionner les étapes qui sont affichées après l'étape en cours de saisie par l'usager, et l'ordre dans lequel elles seront affichées.</p>
+                <p><strong>Note :</strong> Pour que l'affichage reste cohérent tout au long de la saisie du formulaire, il faut donc que tous les chemins possibles de l'usager passent par les étapes sélectionnées, et dans le même ordre.</p>
             </subsection>
         </section>
     </body>

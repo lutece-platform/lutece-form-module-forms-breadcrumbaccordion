@@ -6,13 +6,18 @@
     <body>
         <section name="Module forms breadcrumb accordion">
             <subsection name="Introduction">
-                <p></p>
+                <p>This module enables to have an accordion breadcrumb in the <em>plugin-forms</em>.</p>
+                <p><img src="images/BreadcrumAccordion_presentation.png" /></p>
             </subsection>
             <subsection name="Configuration">
-                <p></p>
-            </subsection>
-            <subsection name="Usage">
-                <p></p>
+                <p><strong>Note :</strong> To be able to configure the accordion breadcrumb, the form has to be first configured to use the accordion breadcrumb.</p>
+                <p>The admin menu <strong>Configuration of the accordion breadcrumb</strong> enables to manage the accordion breadcrumbs.</p>
+                <p><img src="images/BreadcrumAccordion_manage.png" /></p>
+                <p>Only the forms using the accordion breadcrumb are listed in this page. The column <strong>Configured?</strong> enables to know if a configuration exists for the form.</p>
+                <p>The action button <strong>Modify the configuration of the accordion breadcrumb</strong> enables to modify the configuration of the accordion breadcrumb.</p>
+                <p><img src="images/BreadcrumAccordion_modify.png" /></p>
+                <p>In this page, you can select the steps displayed after the step being filled by the user, and the order of the display.</p>
+                <p><strong>Note :</strong> In order to have a consistent display throughout the user filling, all the step paths must go through the selected steps, in the same order.</p>
             </subsection>
         </section>
     </body>
