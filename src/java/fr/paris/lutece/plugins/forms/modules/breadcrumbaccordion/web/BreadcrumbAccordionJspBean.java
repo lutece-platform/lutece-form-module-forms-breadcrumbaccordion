@@ -70,7 +70,7 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
     protected static final String RIGHT_MANAGE_BREADCRUMB = "BREADCRUMBACCORDION_MANAGEMENT";
     protected static final String CONTROLLER_JSP = "ManageBreadcrumbAccordion.jsp";
     protected static final String CONTROLLER_PATH = "jsp/admin/plugins/forms/modules/breadcrumbaccordion";
-    
+
     /**
      * Generated serial id
      */
