@@ -13,7 +13,7 @@
             </#list>
           </div>
           <div class="col-sm-6">
-            <a class="btn btn-primary pull-right" href="jsp/site/Portal.jsp?page=forms&view=getStep&id_form=${step.idForm}&index_step=${stepDisplay?index}">#i18n{module.forms.breadcrumbaccordion.xpage.step.button.modify}</a>
+            <button class="btn btn-primary pull-right" name="action_doGoToStep" type="submit" value="${stepDisplay?index}">#i18n{module.forms.breadcrumbaccordion.xpage.step.button.modify}</button>
           </div>
         </div>
       </div>
