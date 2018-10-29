@@ -54,4 +54,10 @@
         <jiraProjectName>FORMSBACCO</jiraProjectName>
         <jiraComponentId>14653</jiraComponentId>
     </properties>
+    <scm>
+        <connection>scm:git:https://github.com/lutece-platform/lutece-form-module-forms-breadcrumbaccordion.git</connection>
+        <developerConnection>scm:git:https://github.com/lutece-platform/lutece-form-module-forms-breadcrumbaccordion.git</developerConnection>
+        <url>https://github.com/lutece-platform/lutece-form-module-forms-breadcrumbaccordion.git</url>
+        <tag>HEAD</tag>
+  </scm>
 </project>
