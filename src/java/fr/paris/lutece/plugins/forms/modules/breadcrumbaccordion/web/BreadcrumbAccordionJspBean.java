@@ -148,7 +148,7 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
         setPageTitleProperty( MESSAGE_MODIFY_BREADCRUMB_ACCORDION_PAGE_TITLE );
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_BREADCRUMB, getLocale( ), model );
 
-        return template.getHtml( );
+        return getAdminPage (template.getHtml( ));
     }
 
     /**
