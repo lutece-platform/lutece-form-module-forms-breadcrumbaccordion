@@ -1,32 +1,37 @@
-<@box>
-  <@boxBody>
-    <@table>
-      <thead>
-        <tr>
-          <th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.name}</th>
-          <th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state}</th>
-          <th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.actions}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <#list list_breadcrumbAccordion as breadcrumbAccordion>
-          <tr>
-            <td>
-              <strong>${breadcrumbAccordion.formTitle}</strong>&nbsp;
-            </td>
-            <td>
-              <#if breadcrumbAccordion.items?has_content>
-                <@tag color='success'><@icon style='check' /></@tag>
-              <#else>
-                <@tag color='danger'><@icon style='close' /></@tag>
-              </#if>
-            </td>
-            <td>
-              <@aButton href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' buttonIcon='pencil' showTitle=false />
-            </td>
-          </tr>
-        </#list>
-      </tbody>
-    </@table>
-  </@boxBody>
-</@box>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.title}' />
+			<@boxBody>
+				<@table>
+					<thead>
+						<@tr>
+							<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.name}</@th>
+							<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state}</@th>
+							<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.actions}</@th>
+						</@tr>
+					</thead>
+					<tbody>
+						<#list list_breadcrumbAccordion as breadcrumbAccordion>
+						<@tr>
+							<@td>
+								<strong>${breadcrumbAccordion.formTitle}</strong>&nbsp;
+							</@td>
+							<@td>
+								<#if breadcrumbAccordion.items?has_content>
+									<@tag color='success'><@icon style='check' /></@tag>
+								<#else>
+									<@tag color='danger'><@icon style='close' /></@tag>
+								</#if>
+							</@td>
+							<@td>
+								<@aButton href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' buttonIcon='pencil' hideTitle=['all'] size='sm' />	
+							</@td>
+						</@tr>
+						</#list>
+					</tbody>
+				</@table>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
