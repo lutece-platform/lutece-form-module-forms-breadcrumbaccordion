@@ -1,41 +1,36 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' />
-			<@boxBody>
-				<@tform action='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp'>
-					<@table>
-						<thead>
-							<@tr>
-								<@th>#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.toComplete}</@th>
-								<@th>#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.title}</@th>
-								<@th>#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.position}</@th>
-							</@tr>
-						</thead>
-						<tbody>
-							<#list list_breadcrumbAccordion_config_item as configItemDisplay>
-								<@input type='hidden' name='id_form' value='${configItemDisplay.step.idForm}' />
-								<@input type='hidden' name='id_step' value='${configItemDisplay.step.id}' />
-								<@tr>
-									<@td>
-										<@checkBox name='step_to_complete' id='step_to_complete_${configItemDisplay?index}' value=configItemDisplay.step.id?string checked=configItemDisplay.configItem.checked />
-									</@td>
-									<@td valign='middle'>
-										${configItemDisplay.step.title}
-									</@td>
-									<@td>
-										<@input type='text' id='step_position' name='step_position' value='${configItemDisplay.configItem.position!0}' />
-									</@td>
-								</@tr>
-							</#list>
-						</tbody>
-					</@table>
-					<@formGroup>
-						<@button type='submit' name='action_saveConfig' buttonIcon='save' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.save}' hideTitle=['xs'] />
-						<@button type='submit' name='action_cancel' buttonIcon='close' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.cancel}' cancel=true hideTitle=['xs'] />
-					</@formGroup>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@box>
+  <@boxBody>
+    <@tform action='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp'>
+      <@table>
+        <thead>
+          <tr>
+            <th>#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.toComplete}</th>
+            <th>#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.title}</th>
+            <th>#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.position}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <#list list_breadcrumbAccordion_config_item as configItemDisplay>
+            <input name="id_form" value="${configItemDisplay.step.idForm}" type="hidden" />
+            <input name="id_step" value="${configItemDisplay.step.id}" type="hidden" />
+            <tr>
+              <td>
+                <@checkBox name='step_to_complete' id='step_to_complete${configItemDisplay.step.id}' value=configItemDisplay.step.id?string checked=configItemDisplay.configItem.checked mandatory=false />
+              </td>
+              <td>
+                ${configItemDisplay.step.title}
+              </td>
+              <td>
+                <input type='text' id="step_position" type="text" name="step_position" value='${configItemDisplay.configItem.position!0}' />
+              </td>
+            </tr>
+          </#list>
+        </tbody>
+      </@table>
+      <@formGroup>
+        <@button type='submit' name='action_saveConfig' buttonIcon='save' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.save}' showTitleXs=false size='' />
+        <@button type='submit' name='action_cancel' buttonIcon='close' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.cancel}' showTitleXs=false size='' color='btn-secondary' />
+      </@formGroup>
+    </@tform>
+  </@boxBody>
+</@box>
