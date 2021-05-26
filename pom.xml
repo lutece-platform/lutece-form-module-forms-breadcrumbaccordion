@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-forms-breadcrumbaccordion</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
 
     <name>Lutece forms breadcrumb accordion module</name>
 
@@ -58,6 +58,6 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-form-module-forms-breadcrumbaccordion.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-form-module-forms-breadcrumbaccordion.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-form-module-forms-breadcrumbaccordion.git</url>
-        <tag>HEAD</tag>
+        <tag>lutece-form-module-forms-breadcrumbaccordion-1.0.3</tag>
   </scm>
 </project>
