@@ -1,24 +1,28 @@
 <@row>
 	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.title}' skipHeader=true />
-			<@boxBody>
-				<@table headBody=true>
+		<@box title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.title}' >
+			<@table headBody=true>
 				<@tr>
 					<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.name}</@th>
 					<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.actions}</@th>
 				</@tr>
 				<@tableHeadBodySeparator />
 				<#list list_breadcrumbAccordion as breadcrumbAccordion>
-				<@tr>
-					<@td><#if breadcrumbAccordion.items?has_content><@tag color='success'><@icon style='check' /></@tag><#else><@tag color='danger'><@icon style='close' /></@tag></#if> <strong>${breadcrumbAccordion.formTitle}</strong></@td>
-					<@td>
-						<@aButton href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' buttonIcon='pencil' hideTitle=['all'] size='' />	
-					</@td>
-				</@tr>
+					<@tr>
+						<@td>
+							<#if breadcrumbAccordion.items?has_content>
+								<@tag color='success' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state}'><@icon style='check' /></@tag>
+							<#else>
+								<@tag color='danger' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state}'><@icon style='close' /></@tag>
+							</#if>
+							<@link class='fw-bold' href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}'>${breadcrumbAccordion.formTitle}</@link>
+							</@td>
+						<@td>
+							<@aButton href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{portal.util.labelModify}' buttonIcon='pencil' size=''  />	
+						</@td>
+					</@tr>
 				</#list>
-				</@table>
-			</@boxBody>
+			</@table>
 		</@box>
 	</@columns>
 </@row>
