@@ -5,7 +5,7 @@
     <#assign boxChecked><#if configItemDisplay.configItem.checked>checked</#if></#assign>
       <@box class=boxChecked>
         <@boxHeader title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.title} : <strong>${configItemDisplay.step.title!}</strong>' boxTools=true>
-         <@checkBox orientation='switch' labelKey='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.toComplete} ' name='step_to_complete' id='step_to_complete_${configItemDisplay.step.id}' value=configItemDisplay.step.id?string checked=configItemDisplay.configItem.checked mandatory=false /> 
+         <@checkBox orientation='switch' class='check-toggle' labelKey='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.toComplete} ' name='step_to_complete' id='step_to_complete_${configItemDisplay.step.id}' value=configItemDisplay.step.id?string checked=configItemDisplay.configItem.checked mandatory=false /> 
         </@boxHeader>
         <@boxBody class='form-bread-position' id='step_position_${configItemDisplay.step.id}' >
           <@input type='hidden' name='id_form' value='${configItemDisplay.step.idForm!}' />
@@ -26,7 +26,7 @@
 <script>
 $( function(){
   $('.card:not(".checked") .form-bread-position').toggle();
-  $('.form-check-input').on('change', function(){
+  $('.check-toggle').on('change', function(){
     const stepPositionId='#step_position_' + $(this).attr('id').split('_').pop();
     $(stepPositionId).toggle();
   });
