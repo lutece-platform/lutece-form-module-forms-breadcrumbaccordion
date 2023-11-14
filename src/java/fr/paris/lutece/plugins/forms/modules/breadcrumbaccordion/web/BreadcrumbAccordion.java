@@ -121,9 +121,10 @@ public class BreadcrumbAccordion implements IBreadcrumb
     public String getTopHtml( HttpServletRequest request, FormResponseManager formResponseManager )
     {
         List<Step> listValidatedStep = formResponseManager.getValidatedSteps( );
-        Step stepCurrent = listValidatedStep.get( formResponseManager.getValidatedSteps( ).size( ) - 1 );
-        listValidatedStep.remove( listValidatedStep.size( ) - 1 );
-
+        Step stepCurrent = formResponseManager.getCurrentStep( );
+        if ( !listValidatedStep.isEmpty( ) ) {
+            listValidatedStep.remove(listValidatedStep.size( ) - 1);
+        }
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_LIST_STEP_COMPLETED, createStepDisplays( request, listValidatedStep, formResponseManager ) );
         model.put( MARK_CURRENT_STEP, stepCurrent );
@@ -140,14 +141,16 @@ public class BreadcrumbAccordion implements IBreadcrumb
     public Map<String, Object> getModelForCurrentStep( HttpServletRequest request, FormResponseManager formResponseManager )
     {
         Map<String, Object> model = new HashMap<>( );
+        Step stepCurrent = formResponseManager.getCurrentStep();
+        if ( stepCurrent == null ) {
+            model.put( MARK_CURRENT_STEP_INDEX, 0 );
+        } else {
+            List<Step> listStepToComplete = _breadcrumbAccordionService.findStepsToComplete(stepCurrent.getIdForm());
+            List<Step> listNotCompletedStep = findNotCompletedSteps(formResponseManager.getValidatedSteps(), listStepToComplete);
+            int nCurrentStepIndex = listStepToComplete.size() - listNotCompletedStep.size();
 
-        Step stepCurrent = formResponseManager.getValidatedSteps( ).get( formResponseManager.getValidatedSteps( ).size( ) - 1 );
-        List<Step> listStepToComplete = _breadcrumbAccordionService.findStepsToComplete( stepCurrent.getIdForm( ) );
-        List<Step> listNotCompletedStep = findNotCompletedSteps( formResponseManager.getValidatedSteps( ), listStepToComplete );
-        int nCurrentStepIndex = listStepToComplete.size( ) - listNotCompletedStep.size( );
-
-        model.put( MARK_CURRENT_STEP_INDEX, nCurrentStepIndex );
-
+            model.put(MARK_CURRENT_STEP_INDEX, nCurrentStepIndex);
+        }
         return model;
     }
 
@@ -157,12 +160,18 @@ public class BreadcrumbAccordion implements IBreadcrumb
     @Override
     public String getBottomHtml( HttpServletRequest request, FormResponseManager formResponseManager )
     {
-        Step stepCurrent = formResponseManager.getValidatedSteps( ).get( formResponseManager.getValidatedSteps( ).size( ) - 1 );
-
-        List<Step> listStepToComplete = _breadcrumbAccordionService.findStepsToComplete( stepCurrent.getIdForm( ) );
-        List<Step> listNotCompletedStep = findNotCompletedSteps( formResponseManager.getValidatedSteps( ), listStepToComplete );
-        int nCurrentStepIndex = listStepToComplete.size( ) - listNotCompletedStep.size( );
-
+        Step stepCurrent = formResponseManager.getCurrentStep();
+        List<Step> listStepToComplete;
+        List<Step> listNotCompletedStep;
+        int nCurrentStepIndex;
+        if ( stepCurrent == null ) {
+            listNotCompletedStep = new ArrayList<>();
+            nCurrentStepIndex = 0;
+        } else {
+            listStepToComplete = _breadcrumbAccordionService.findStepsToComplete(stepCurrent.getIdForm());
+            listNotCompletedStep = findNotCompletedSteps(formResponseManager.getValidatedSteps(), listStepToComplete);
+            nCurrentStepIndex = listStepToComplete.size() - listNotCompletedStep.size();
+        }
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_LIST_STEP_TO_COMPLETE, listNotCompletedStep );
         model.put( MARK_CURRENT_STEP_INDEX, nCurrentStepIndex );
