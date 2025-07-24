@@ -40,11 +40,13 @@ import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.web.BreadcrumbA
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * This class represents a Data Access Object for a SQL database for {@code BreadcrumbAccordion} objects
  *
  */
+@ApplicationScoped
 public class BreadcrumbAccordionDAO implements IBreadcrumbAccordionDAO
 {
     private static final String SQL_QUERY_SELECT = "SELECT id_form, id_step, position FROM forms_breadcrumbaccordion_config_item";
@@ -60,23 +62,26 @@ public class BreadcrumbAccordionDAO implements IBreadcrumbAccordionDAO
     @Override
     public BreadcrumbAccordionConfig selectByIdForm( int nIdForm )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT + SQL_QUERY_ID_FORM, _plugin );
+    	BreadcrumbAccordionConfig breadcrumbAccordionConfig = null;
 
-        int nPos = 0;
-        daoUtil.setInt( ++nPos, nIdForm );
-
-        daoUtil.executeQuery( );
-
-        List<BreadcrumbAccordionConfigItem> listBreadcrumbAccordionConfigItem = new ArrayList<>( );
-
-        while ( daoUtil.next( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT + SQL_QUERY_ID_FORM, _plugin ) )
         {
-            listBreadcrumbAccordionConfigItem.add( dataToObject( daoUtil ) );
+            int nPos = 0;
+            daoUtil.setInt( ++nPos, nIdForm );
+
+            daoUtil.executeQuery( );
+
+            List<BreadcrumbAccordionConfigItem> listBreadcrumbAccordionConfigItem = new ArrayList<>( );
+
+            while ( daoUtil.next( ) )
+            {
+                listBreadcrumbAccordionConfigItem.add( dataToObject( daoUtil ) );
+            }
+
+            breadcrumbAccordionConfig = new BreadcrumbAccordionConfig( nIdForm, listBreadcrumbAccordionConfigItem );
         }
 
-        daoUtil.close( );
-
-        return new BreadcrumbAccordionConfig( nIdForm, listBreadcrumbAccordionConfigItem );
+        return breadcrumbAccordionConfig;
     }
 
     /**
@@ -85,21 +90,20 @@ public class BreadcrumbAccordionDAO implements IBreadcrumbAccordionDAO
     @Override
     public void insert( BreadcrumbAccordionConfig breadcrumbAccordionConfig )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, _plugin );
-
-        deleteByIdForm( breadcrumbAccordionConfig.getIdForm( ) );
-
-        for ( BreadcrumbAccordionConfigItem breadcrumbAccordionConfigItem : breadcrumbAccordionConfig.getItems( ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, _plugin ) )
         {
-            int nPos = 0;
-            daoUtil.setInt( ++nPos, breadcrumbAccordionConfig.getIdForm( ) );
-            daoUtil.setInt( ++nPos, breadcrumbAccordionConfigItem.getIdStep( ) );
-            daoUtil.setInt( ++nPos, breadcrumbAccordionConfigItem.getPosition( ) );
+            deleteByIdForm( breadcrumbAccordionConfig.getIdForm( ) );
 
-            daoUtil.executeUpdate( );
+            for ( BreadcrumbAccordionConfigItem breadcrumbAccordionConfigItem : breadcrumbAccordionConfig.getItems( ) )
+            {
+                int nPos = 0;
+                daoUtil.setInt( ++nPos, breadcrumbAccordionConfig.getIdForm( ) );
+                daoUtil.setInt( ++nPos, breadcrumbAccordionConfigItem.getIdStep( ) );
+                daoUtil.setInt( ++nPos, breadcrumbAccordionConfigItem.getPosition( ) );
+
+                daoUtil.executeUpdate( );
+            }
         }
-
-        daoUtil.close( );
     }
 
     /**
@@ -108,11 +112,9 @@ public class BreadcrumbAccordionDAO implements IBreadcrumbAccordionDAO
     @Override
     public List<BreadcrumbAccordionConfig> selectBreadcrumbAccordionConfigList( )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, _plugin );
-
         List<BreadcrumbAccordionConfig> listBreadcrumbAccordionConfig = new ArrayList<>( );
-
-        try
+	
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ALL, _plugin ) )
         {
             daoUtil.executeQuery( );
 
@@ -127,10 +129,7 @@ public class BreadcrumbAccordionDAO implements IBreadcrumbAccordionDAO
                 listBreadcrumbAccordionConfig.add( breadcrumbAccordionConfig );
             }
         }
-        finally
-        {
-            daoUtil.close( );
-        }
+
         return listBreadcrumbAccordionConfig;
     }
 
@@ -140,17 +139,11 @@ public class BreadcrumbAccordionDAO implements IBreadcrumbAccordionDAO
     @Override
     public void deleteByIdForm( int nIdForm )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE + SQL_QUERY_ID_FORM, _plugin );
-
-        try
+        try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE + SQL_QUERY_ID_FORM, _plugin ) )
         {
             int nPos = 0;
             daoUtil.setInt( ++nPos, nIdForm );
             daoUtil.executeUpdate( );
-        }
-        finally
-        {
-            daoUtil.close( );
         }
     }
 

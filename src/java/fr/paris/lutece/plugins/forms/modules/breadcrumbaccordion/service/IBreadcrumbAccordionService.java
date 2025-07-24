@@ -44,9 +44,6 @@ import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.Breadc
  */
 public interface IBreadcrumbAccordionService
 {
-
-    String BEAN_NAME = "forms-breadcrumbaccordion.breadcrumbAccordionService";
-
     /**
      * Finds the {@code breadcrumbAccordionConfig} object from the specified form id
      * 
