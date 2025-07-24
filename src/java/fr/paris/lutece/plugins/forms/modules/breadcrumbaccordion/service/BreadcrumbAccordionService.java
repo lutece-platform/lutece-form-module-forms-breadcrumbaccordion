@@ -39,7 +39,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import fr.paris.lutece.plugins.forms.business.Step;
 import fr.paris.lutece.plugins.forms.business.StepHome;
@@ -51,6 +52,7 @@ import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.IBread
  * This class is a service for the breadcrumb accordion
  *
  */
+@ApplicationScoped
 public class BreadcrumbAccordionService implements IBreadcrumbAccordionService
 {
     @Inject

@@ -40,8 +40,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 import fr.paris.lutece.plugins.forms.business.FormDisplay;
 import fr.paris.lutece.plugins.forms.business.FormDisplayHome;
@@ -62,6 +66,8 @@ import fr.paris.lutece.util.html.HtmlTemplate;
  * This class is a Breadcrumb Accordion
  *
  */
+@ApplicationScoped
+@Named( BreadcrumbAccordion.BEAN_NAME )
 public class BreadcrumbAccordion implements IBreadcrumb
 {
 
@@ -90,7 +96,9 @@ public class BreadcrumbAccordion implements IBreadcrumb
      * @param strBreadcrumbAccordionDisplayName
      *            The Breadcrumbmd display name
      */
-    public BreadcrumbAccordion( String strBreadcrumbAccordionName, String strBreadcrumbAccordionDisplayName )
+    @Inject
+    public BreadcrumbAccordion( @ConfigProperty( name = "forms-breadcrumbaccordion.breadcrumbAccordion.beanName" ) String strBreadcrumbAccordionName, 
+    		 @ConfigProperty( name = "forms-breadcrumbaccordion.breadcrumbAccordion.displayBeanName" ) String strBreadcrumbAccordionDisplayName )
     {
         _strBreadcrumbAccordionBeanName = strBreadcrumbAccordionName;
         _strBreadcrumbAccordionDisplayBeanName = I18nService.getLocalizedString( strBreadcrumbAccordionDisplayName, I18nService.getDefaultLocale( ) );

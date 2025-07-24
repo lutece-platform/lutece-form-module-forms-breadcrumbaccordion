@@ -37,7 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -51,7 +54,6 @@ import fr.paris.lutece.plugins.genericattributes.service.entrytype.IEntryTypeSer
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
@@ -64,6 +66,8 @@ import fr.paris.lutece.util.html.HtmlTemplate;
  * {@link fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.web.BreadcrumbAccordionJspBean BreadcrumbAccordionJspBean}
  *
  */
+@RequestScoped
+@Named
 @Controller( controllerJsp = BreadcrumbAccordionJspBean.CONTROLLER_JSP, controllerPath = BreadcrumbAccordionJspBean.CONTROLLER_PATH, right = BreadcrumbAccordionJspBean.RIGHT_MANAGE_BREADCRUMB )
 public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
 {
@@ -106,7 +110,8 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
     private static final String FIELD_POSITION = "module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.position";
 
     // Service
-    private final transient IBreadcrumbAccordionService _breadcrumbAccordionService = SpringContextService.getBean( IBreadcrumbAccordionService.BEAN_NAME );
+    @Inject
+    private IBreadcrumbAccordionService _breadcrumbAccordionService;
 
     /**
      * Returns the breadcrumb management page
@@ -135,7 +140,7 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
      *            The request
      * @return the page
      */
-    @View( value = VIEW_MODIFY_BREADCRUMB )
+    @View( value = VIEW_MODIFY_BREADCRUMB, securityTokenAction = ACTION_SAVE_CONFIG )
     public String getModifyBreadcrumb( HttpServletRequest request )
     {
         int nIdForm = NumberUtils.toInt( request.getParameter( PARAMETER_ID_FORM ) );
@@ -346,7 +351,7 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
      *            The request
      * @return The Jsp URL of the process result
      */
-    @Action( ACTION_CANCEL )
+    @Action( value = ACTION_CANCEL, securityTokenDisabled = true )
     public String doCancel( HttpServletRequest request )
     {
         return getManageBreadcrumbs( request );
