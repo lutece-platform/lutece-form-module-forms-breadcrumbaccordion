@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset forms-breadcrumbaccordion:create_db_forms-breadcrumbaccordion.sql
+--preconditions onFail:MARK_RAN onError:WARN
 --
 -- Structure for table forms_form
 --
