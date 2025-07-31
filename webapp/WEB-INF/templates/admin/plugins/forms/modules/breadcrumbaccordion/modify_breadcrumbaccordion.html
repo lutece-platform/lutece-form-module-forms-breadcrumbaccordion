@@ -1,8 +1,6 @@
-<#assign formId=0 />
 <@div class='container'>
   <@tform  action='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp'>
     <@div class='sortable'>
-    <#if list_breadcrumbAccordion_config_item?size gt 0>
     <#list list_breadcrumbAccordion_config_item as configItemDisplay>
     <#assign boxChecked><#if configItemDisplay.configItem.checked>checked</#if></#assign>
       <@box class=boxChecked>
@@ -11,7 +9,6 @@
         </@boxHeader>
         <@boxBody class='form-bread-position' id='step_position_${configItemDisplay.step.id}' >
           <@input type='hidden' name='id_form' value='${configItemDisplay.step.idForm!}' />
-          <#assign formId=configItemDisplay.step.idForm! />
           <@input type='hidden' name='id_step' value='${configItemDisplay.step.id!}' />
           <@formGroup labelKey='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.position}'>
             <@input type='number' class='step-pos' name='step_position' value='${configItemDisplay.configItem.position!0}' params=' style="width: 60px"' min=0 max=99/>
@@ -19,31 +16,19 @@
         </@boxBody>
       </@box>
     </#list>
-    </#if>
     </@div>
     <@formGroup class='d-flex justify-content-center is-flex is-justify-content-center'>
       <@button type='submit' name='action_saveConfig' buttonIcon='save' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.save}' showTitleXs=false size='' />
-      <@button type='submit' name='action_cancel' buttonIcon='x' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.cancel}' showTitleXs=false size='' color='secondary' />
-      <@aButton href='jsp/admin/plugins/forms/ManageSteps.jsp?view=manageSteps&id_form=${formId!}' buttonIcon='arrow-back' title='#i18n{forms.summary.step.previous}' color='outline-secondary' />
+      <@button type='submit' name='action_cancel' buttonIcon='close' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.cancel}' showTitleXs=false size='' color='btn-secondary' />
     </@formGroup>
   </@tform>
 </@div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Hide .form-bread-position for unchecked cards
-  document.querySelectorAll('.card:not(.checked) .form-bread-position').forEach(function(el) {
-    el.style.display = 'none';
-  });
-
-  // Add event listeners to all checkboxes with class 'check-toggle'
-  document.querySelectorAll('.check-toggle').forEach(function(checkbox) {
-    checkbox.addEventListener('change', function() {
-      var stepId = this.id.split('_').pop();
-      var stepPosition = document.getElementById('step_position_' + stepId);
-      if (stepPosition) {
-        stepPosition.style.display = this.checked ? '' : 'none';
-      }
-    });
+$( function(){
+  $('.card:not(".checked") .form-bread-position').toggle();
+  $('.check-toggle').on('change', function(){
+    const stepPositionId='#step_position_' + $(this).attr('id').split('_').pop();
+    $(stepPositionId).toggle();
   });
 });
 </script>
