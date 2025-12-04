@@ -1,34 +1,45 @@
-<@div class='container'>
-  <@tform  action='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp'>
-    <@div class='sortable'>
-    <#list list_breadcrumbAccordion_config_item as configItemDisplay>
-    <#assign boxChecked><#if configItemDisplay.configItem.checked>checked</#if></#assign>
-      <@box class=boxChecked>
-        <@boxHeader title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.title} : <strong>${configItemDisplay.step.title!}</strong>' boxTools=true>
-         <@checkBox orientation='switch' class='check-toggle' labelKey='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.toComplete} ' name='step_to_complete' id='step_to_complete_${configItemDisplay.step.id}' value=configItemDisplay.step.id?string checked=configItemDisplay.configItem.checked mandatory=false /> 
-        </@boxHeader>
-        <@boxBody class='form-bread-position' id='step_position_${configItemDisplay.step.id}' >
-          <@input type='hidden' name='id_form' value='${configItemDisplay.step.idForm!}' />
-          <@input type='hidden' name='id_step' value='${configItemDisplay.step.id!}' />
-          <@formGroup labelKey='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.position}'>
-            <@input type='number' class='step-pos' name='step_position' value='${configItemDisplay.configItem.position!0}' params=' style="width: 60px"' min=0 max=99/>
-          </@formGroup>
-        </@boxBody>
-      </@box>
-    </#list>
-    </@div>
-    <@formGroup class='d-flex justify-content-center is-flex is-justify-content-center'>
-      <@button type='submit' name='action_saveConfig' buttonIcon='save' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.save}' showTitleXs=false size='' />
-      <@button type='submit' name='action_cancel' buttonIcon='close' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.cancel}' showTitleXs=false size='' color='btn-secondary' />
-    </@formGroup>
-  </@tform>
-</@div>
+<#if list_breadcrumbAccordion_config_item?? && list_breadcrumbAccordion_config_item?size gt 0>
+<@tform name='modify_breadcrumb' action='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp'  params='target="_top"'>
+  <@div class='sortable'>
+  <#list list_breadcrumbAccordion_config_item as configItemDisplay>
+  <#assign boxChecked><#if configItemDisplay.configItem.checked>checked</#if></#assign>
+    <@box class=boxChecked>
+      <@boxHeader title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.title} : <strong>${configItemDisplay.step.title!}</strong>' boxTools=true>
+        <@checkBox orientation='switch' class='check-toggle' labelKey='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.toComplete} ' name='step_to_complete' id='step_to_complete_${configItemDisplay.step.id}' value=configItemDisplay.step.id?string checked=configItemDisplay.configItem.checked mandatory=false /> 
+      </@boxHeader>
+      <@boxBody class='form-bread-position' id='step_position_${configItemDisplay.step.id}' >
+        <@input type='hidden' name='id_form' value='${configItemDisplay.step.idForm!}' />
+        <@input type='hidden' name='id_step' value='${configItemDisplay.step.id!}' />
+        <@formGroup labelKey='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.step.position}'>
+          <@input type='number' class='step-pos' name='step_position' value='${configItemDisplay.configItem.position!0}' params=' style="width: 60px"' min=0 max=99/>
+        </@formGroup>
+      </@boxBody>
+    </@box>
+  </#list>
+  </@div>
+  <@formGroup>
+    <@button type='submit' name='action_saveConfig' buttonIcon='save' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.save}' showTitleXs=false size='' />
+    <@button type='submit' name='action_cancel' buttonIcon='close' title='#i18n{module.forms.breadcrumbaccordion.modify_breadcrumbAccordion.button.cancel}' showTitleXs=false size='' color='btn-secondary' />
+  </@formGroup>
+</@tform>
+<#else>
+  <@empty  />
+</#if>
 <script>
-$( function(){
-  $('.card:not(".checked") .form-bread-position').toggle();
-  $('.check-toggle').on('change', function(){
-    const stepPositionId='#step_position_' + $(this).attr('id').split('_').pop();
-    $(stepPositionId).toggle();
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.card:not(.checked) .form-bread-position').forEach(function(el) {
+    el.classList.add('d-none');
+  });
+  
+  document.querySelectorAll('.check-toggle').forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      const stepId = this.id.split('_').pop();
+      const stepPosition = document.getElementById('step_position_' + stepId);
+      if (stepPosition) {
+        stepPosition.classList.toggle('d-none');
+      }
+    });
   });
 });
+<@offcanvasIframeScript triggerForm='modify_breadcrumb' triggerActionId='action_saveConfig' />
 </script>

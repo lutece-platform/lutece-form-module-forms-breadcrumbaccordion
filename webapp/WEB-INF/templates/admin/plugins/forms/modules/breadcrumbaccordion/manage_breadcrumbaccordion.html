@@ -1,34 +1,42 @@
-<@div class='container'>
-	<@row>
-		<@columns>
-			<@box>
-				<@boxHeader title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.title}' />
-				<@boxBody>
-					<@table headBody=true>
-						<@tr>
-							<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.name}</@th>
-							<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state}</@th>
-							<@th>#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.actions}</@th>
-						</@tr>
-						<@tableHeadBodySeparator />
-						<#list list_breadcrumbAccordion as breadcrumbAccordion>
-						<@tr>
-							<@td class='font-weight-bold'>${breadcrumbAccordion.formTitle}</@td>
-							<@td>
-								<#if breadcrumbAccordion.items?has_content>
-									<@tag color='success'><@icon style='check' class='ml-1 me-1' /> #i18n{portal.util.labelYes}</@tag>
-								<#else>
-									<@tag color='danger'><@icon style='close' class='ml-1 me-1' /> #i18n{portal.util.labelNo}</@tag>
-								</#if>
-							</@td>
-							<@td>
-								<@aButton href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' buttonIcon='edit' hideTitle=['xs'] size='sm' />	
-							</@td>
-						</@tr>
-						</#list>
-					</@table>
-				</@boxBody>
-			</@box>
-		</@columns>
-	</@row>
-</@div>
+<@pageContainer>
+    <@pageColumn>
+		<@pageHeader title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.title}' boxTools=true>
+         <@tform type='inline'>
+				<@formGroup labelFor='plugin_type' labelKey='#i18n{portal.system.manage_plugins.buttonFilter}' hideLabel=['all'] formStyle='inline'>
+					<@inputGroup>
+						<@input type='text' name='search_forms' id='search_forms' placeHolder='#i18n{portal.system.manage_plugins.buttonFilter}' params='autocomplete="off" addons' />
+						<@button color='primary' title='#i18n{portal.system.manage_plugins.buttonFilter}' buttonIcon='filter' hideTitle=['all'] />
+					</@inputGroup>
+				</@formGroup>
+			</@tform>
+        </@pageHeader>
+		<@manageFeature>
+		<#list list_breadcrumbAccordion as breadcrumbAccordion>
+		<@manageFeatureItem>
+			<@manageFeatureItemColumn class='searchable'>${breadcrumbAccordion.formTitle}</@manageFeatureItemColumn>
+			<@manageFeatureItemColumn>
+			#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state} 
+				<#if breadcrumbAccordion.items?has_content>
+					<@tag color='success' class='mx-1'><@icon style='check' /> #i18n{portal.util.labelYes}</@tag>
+				<#else>
+					<@tag color='danger' class='mx-1'><@icon style='x' /> #i18n{portal.util.labelNo}</@tag>
+				</#if>
+			</@manageFeatureItemColumn>
+			<@manageFeatureItemColumn class='form-actions' align='end' >
+				<@aButton href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' buttonIcon='pencil' hideTitle=['xs','sm','md','lg'] params='data-bs-toggle="offcanvas" data-bs-target="#modifyBreadcrumb" data-bs-scroll="true" data-bs-backdrop="false" data-url="jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}"'  />	
+			</@manageFeatureItemColumn>
+		 </@manageFeatureItem>
+		</#list>
+		</@manageFeature>
+    </@pageColumn>
+</@pageContainer>
+<@offcanvasIframe id='modifyBreadcrumb' label='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' />
+<script type="module">
+import LuteceSearchList from './themes/shared/modules/luteceSearchList.js';
+const searchInput = document.querySelector("#search_forms");
+const searchElementList = document.querySelectorAll(".card");
+new LuteceSearchList( searchInput, searchElementList, {
+    searchableChild: [".searchable"],
+    highlight: true,
+});
+</script>
