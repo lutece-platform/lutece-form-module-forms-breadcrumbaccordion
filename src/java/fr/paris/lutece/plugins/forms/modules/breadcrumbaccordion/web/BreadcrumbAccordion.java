@@ -46,15 +46,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
-
+import fr.paris.lutece.plugins.forms.web.ICompositeDisplay;
 import fr.paris.lutece.plugins.forms.business.FormDisplay;
 import fr.paris.lutece.plugins.forms.business.FormDisplayHome;
 import fr.paris.lutece.plugins.forms.business.FormQuestionResponse;
 import fr.paris.lutece.plugins.forms.business.FormResponse;
-import fr.paris.lutece.plugins.forms.business.Question;
 import fr.paris.lutece.plugins.forms.business.Step;
 import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.service.BreadcrumbAccordionService;
-import fr.paris.lutece.plugins.forms.web.CompositeQuestionDisplay;
+import fr.paris.lutece.plugins.forms.service.FormService;
 import fr.paris.lutece.plugins.forms.web.FormResponseManager;
 import fr.paris.lutece.plugins.forms.web.breadcrumb.IBreadcrumb;
 import fr.paris.lutece.plugins.forms.web.entrytype.DisplayType;
@@ -87,6 +86,8 @@ public class BreadcrumbAccordion implements IBreadcrumb
     // Service
     @Inject
     private BreadcrumbAccordionService _breadcrumbAccordionService;
+    @Inject
+    private FormService _formService;
 
     /**
      * Constructor
@@ -244,16 +245,12 @@ public class BreadcrumbAccordion implements IBreadcrumb
     private List<StepDisplay> createStepDisplays( HttpServletRequest request, List<Step> listStep, FormResponseManager formResponseManager )
     {
         List<StepDisplay> listStepDisplay = new ArrayList<>( );
+        FormResponse formResponse = formResponseManager.getFormResponse( );
 
         for ( Step step : listStep )
         {
             StepDisplay stepDisplay = new StepDisplay( step );
-
-            for ( FormQuestionResponse formQuestionResponse : formResponseManager.findResponsesFor( step ) )
-            {
-                stepDisplay.addHtml( buildHtmlForQuestion( request, formResponseManager.getFormResponse( ), formQuestionResponse, request.getLocale( ) ) );
-            }
-
+            buildAndAddHtmlToStepDisplay( request, stepDisplay, formResponse, formResponseManager.findResponsesFor( step ) );
             listStepDisplay.add( stepDisplay );
         }
 
@@ -261,33 +258,30 @@ public class BreadcrumbAccordion implements IBreadcrumb
     }
 
     /**
-     * Builds the HTML for the specified question
+     * Builds and add the HTML to the specified stepDisplay
      * 
      * @param request
      *            the request
+     * @param stepDisplay
+     *            the step display
      * @param formResponse
      *            the form response
-     * @param formQuestionResponse
-     *            the form response associated to the questions
-     * @param locale
-     *            the locale
-     * @return the HTML
+     * @param formQuestionResponseList
+     *            the question responses
      */
-    private String buildHtmlForQuestion( HttpServletRequest request, FormResponse formResponse, FormQuestionResponse formQuestionResponse, Locale locale )
+    private void buildAndAddHtmlToStepDisplay( HttpServletRequest request, StepDisplay stepDisplay, FormResponse formResponse, 
+                                               List<FormQuestionResponse> formQuestionResponseList )
     {
-        Question question = formQuestionResponse.getQuestion( );
-        FormDisplay formDisplayQuestion = FormDisplayHome.getFormDisplayByFormStepAndComposite( formResponse.getFormId( ), question.getIdStep( ),
-                question.getId( ) );
-        CompositeQuestionDisplay compositeQuestionDisplay = new CompositeQuestionDisplay( formDisplayQuestion, formResponse, question.getIterationNumber( ) );
-        List<FormQuestionResponse> listFormQuestionResponse = new ArrayList<>( );
-
+        List<FormDisplay> stepFormDisplayList = FormDisplayHome.getFormDisplayListByParent( stepDisplay.getStep( ).getId( ), 0 );
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_IS_BREADCRUMB_ACCORDION, true );
-        compositeQuestionDisplay.addModel( model );
 
-        listFormQuestionResponse.add( formQuestionResponse );
-
-        return compositeQuestionDisplay.getCompositeHtml( request, listFormQuestionResponse, locale, DisplayType.READONLY_FRONTOFFICE );
+        for ( FormDisplay formDisplay : stepFormDisplayList )
+        {
+            ICompositeDisplay composite = _formService.formDisplayToComposite( formDisplay, formResponse, 0 );
+            composite.addModel( model );
+            stepDisplay.addHtml( composite.getCompositeHtml( request, formQuestionResponseList, request.getLocale( ), DisplayType.READONLY_FRONTOFFICE ) );
+        }
     }
 
     /**
