@@ -23,14 +23,13 @@
 				</#if>
 			</@manageFeatureItemColumn>
 			<@manageFeatureItemColumn class='form-actions' align='end' >
-				<@aButton href='jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}' title='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' buttonIcon='pencil' hideTitle=['xs','sm','md','lg'] params='data-bs-toggle="offcanvas" data-bs-target="#modifyBreadcrumb" data-bs-scroll="true" data-bs-backdrop="false" data-url="jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}"'  />	
+				<@offcanvas targetUrl="jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}" useIframe=true targetElement="#modifyBreadcrumb" id="bread_${breadcrumbAccordion.idForm}" title="#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}" btnTitle="#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}" btnIcon="pencil" position="end" size="half" />
 			</@manageFeatureItemColumn>
 		 </@manageFeatureItem>
 		</#list>
 		</@manageFeature>
     </@pageColumn>
 </@pageContainer>
-<@offcanvasIframe id='modifyBreadcrumb' label='#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}' />
 <script type="module">
 import LuteceSearchList from './themes/shared/modules/luteceSearchList.js';
 const searchInput = document.querySelector("#search_forms");
