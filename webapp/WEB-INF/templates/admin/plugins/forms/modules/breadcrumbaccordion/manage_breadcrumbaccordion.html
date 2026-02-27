@@ -13,15 +13,14 @@
 		<@manageFeature>
 		<#list list_breadcrumbAccordion as breadcrumbAccordion>
 		<@manageFeatureItem>
-			<@manageFeatureItemColumn class='searchable'>${breadcrumbAccordion.formTitle}</@manageFeatureItemColumn>
-			<@manageFeatureItemColumn>
-			#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state} 
+			<@manageFeatureItemColumn auto=true>
 				<#if breadcrumbAccordion.items?has_content>
-					<@tag color='success' class='mx-1'><@icon style='check' /> #i18n{portal.util.labelYes}</@tag>
+					<@tag color='success' class='mx-1' params='title="#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state} #i18n{portal.util.labelYes}"'><@icon style='check' /></@tag>
 				<#else>
-					<@tag color='danger' class='mx-1'><@icon style='x' /> #i18n{portal.util.labelNo}</@tag>
+					<@tag color='danger' class='mx-1' params='title="#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.state} #i18n{portal.util.labelNo}"'><@icon style='x' /></@tag>
 				</#if>
 			</@manageFeatureItemColumn>
+			<@manageFeatureItemColumn class='searchable'>${breadcrumbAccordion.formTitle}</@manageFeatureItemColumn>
 			<@manageFeatureItemColumn class='form-actions' align='end' >
 				<@offcanvas targetUrl="jsp/admin/plugins/forms/modules/breadcrumbaccordion/ManageBreadcrumbAccordion.jsp?view=modifyBreadcrumb&id_form=${breadcrumbAccordion.idForm}" useIframe=true targetElement="#modifyBreadcrumb" id="bread_${breadcrumbAccordion.idForm}" title="#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}" btnTitle="#i18n{module.forms.breadcrumbaccordion.manage_breadcrumbAccordion.button.modify}" btnIcon="pencil" position="end" size="half" />
 			</@manageFeatureItemColumn>
