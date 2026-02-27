@@ -88,13 +88,23 @@ public class BreadcrumbAccordionService implements IBreadcrumbAccordionService
 
         BreadcrumbAccordionConfig breadcrumbAccordionConfig = _breadcrumbAccordionDAO.selectByIdForm( nIdForm );
 
+        if ( breadcrumbAccordionConfig == null || breadcrumbAccordionConfig.getItems( ) == null )
+        {
+            return listStepToComplete;
+        }
+
         List<BreadcrumbAccordionConfigItem> listBreadcrumbAccordionConfigItem = breadcrumbAccordionConfig.getItems( );
 
         Collections.sort( listBreadcrumbAccordionConfigItem, _breadcrumbAccordionConfigItemComparator );
 
         for ( BreadcrumbAccordionConfigItem breadcrumbAccordionConfigItem : listBreadcrumbAccordionConfigItem )
         {
-            listStepToComplete.add( StepHome.findByPrimaryKey( breadcrumbAccordionConfigItem.getIdStep( ) ) );
+            Step step = StepHome.findByPrimaryKey( breadcrumbAccordionConfigItem.getIdStep( ) );
+
+            if ( step != null )
+            {
+                listStepToComplete.add( step );
+            }
         }
 
         return listStepToComplete;
