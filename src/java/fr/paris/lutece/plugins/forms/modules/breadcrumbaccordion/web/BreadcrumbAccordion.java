@@ -203,16 +203,27 @@ public class BreadcrumbAccordion implements IBreadcrumb
     {
         List<Step> listNotCompletedStep = new ArrayList<>( );
 
+        if ( listStepValidated == null || listStepToComplete == null )
+        {
+            return listNotCompletedStep;
+        }
+
         for ( int i = listStepToComplete.size( ) - 1; i >= 0; i-- )
         {
             boolean bFound = false;
             Step stepToComplete = listStepToComplete.get( i );
 
+            if ( stepToComplete == null )
+            {
+                continue;
+            }
+
             for ( Step stepValidated : listStepValidated )
             {
-                if ( stepToComplete.getId( ) == stepValidated.getId( ) )
+                if ( stepValidated != null && stepToComplete.getId( ) == stepValidated.getId( ) )
                 {
                     bFound = true;
+                    break;
                 }
             }
 
