@@ -1,24 +1,13 @@
 <@cTpl>  
 <#if list_step_completed?has_content>
-  <div id="breadcrumb-accordion-top" class="panel panel-default">
-    <#list list_step_completed as stepDisplay>
-      <#assign step = stepDisplay.step/>
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="fa fa-check step-number step-completed"></span> ${step.title?replace('hidden','')}</h3>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-sm-6">
-            <#list stepDisplay.questionHtml as questionHtml>
-              ${questionHtml}
-            </#list>
-          </div>
-          <div class="col-sm-6">
-            <button class="btn btn-primary pull-right" name="action_doGoToStep" type="submit" value="${stepDisplay?index}">#i18n{module.forms.breadcrumbaccordion.xpage.step.button.modify}</button>
-          </div>
-        </div>
-      </div>
-    </#list>
-  </div>
+	<#list list_step_completed as stepDisplay>
+		<#assign cStep = stepDisplay.step />
+		<#assign cStepTitle = cStep.title />
+		<@cStepDone step=cStep.id title=cStepTitle! idx=stepDisplay?index actionLabel='#i18n{module.forms.breadcrumbaccordion.xpage.step.button.modify}' >
+		<#list stepDisplay.questionHtml as questionHtml>
+			${questionHtml}
+		</#list>
+		</@cStepDone>	
+	</#list>
 </#if>
 </@cTpl>
