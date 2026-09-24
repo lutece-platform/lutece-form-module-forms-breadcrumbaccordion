@@ -47,6 +47,7 @@ import fr.paris.lutece.plugins.forms.business.StepHome;
 import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.BreadcrumbAccordionConfig;
 import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.BreadcrumbAccordionConfigItem;
 import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.IBreadcrumbAccordionDAO;
+import fr.paris.lutece.plugins.forms.service.cache.FormsCacheService;
 
 /**
  * This class is a service for the breadcrumb accordion
@@ -55,8 +56,13 @@ import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.IBread
 @ApplicationScoped
 public class BreadcrumbAccordionService implements IBreadcrumbAccordionService
 {
+    private static final String BREADCRUMB_ACCORDION_CONFIG_CACHE_KEY = "BreadcrumbAccordionConfig-Form-id:";
+
     @Inject
     private IBreadcrumbAccordionDAO _breadcrumbAccordionDAO;
+
+    @Inject
+    private FormsCacheService _formsCacheService;
 
     private final BreadcrumbAccordionConfigItemComparator _breadcrumbAccordionConfigItemComparator = new BreadcrumbAccordionConfigItemComparator( );
 
@@ -66,7 +72,20 @@ public class BreadcrumbAccordionService implements IBreadcrumbAccordionService
     @Override
     public BreadcrumbAccordionConfig findbyIdForm( int nIdForm )
     {
-        return _breadcrumbAccordionDAO.selectByIdForm( nIdForm );
+        String strCacheKey = BREADCRUMB_ACCORDION_CONFIG_CACHE_KEY + nIdForm;
+        BreadcrumbAccordionConfig breadcrumbAccordionConfig = ( BreadcrumbAccordionConfig ) _formsCacheService.get( strCacheKey );
+
+        if ( breadcrumbAccordionConfig == null )
+        {
+            breadcrumbAccordionConfig = _breadcrumbAccordionDAO.selectByIdForm( nIdForm );
+
+            if ( breadcrumbAccordionConfig != null )
+            {
+                _formsCacheService.put( strCacheKey, breadcrumbAccordionConfig );
+            }
+        }
+
+        return breadcrumbAccordionConfig;
     }
 
     /**
@@ -86,14 +105,14 @@ public class BreadcrumbAccordionService implements IBreadcrumbAccordionService
     {
         List<Step> listStepToComplete = new ArrayList<>( );
 
-        BreadcrumbAccordionConfig breadcrumbAccordionConfig = _breadcrumbAccordionDAO.selectByIdForm( nIdForm );
+        BreadcrumbAccordionConfig breadcrumbAccordionConfig = findbyIdForm( nIdForm );
 
         if ( breadcrumbAccordionConfig == null || breadcrumbAccordionConfig.getItems( ) == null )
         {
             return listStepToComplete;
         }
 
-        List<BreadcrumbAccordionConfigItem> listBreadcrumbAccordionConfigItem = breadcrumbAccordionConfig.getItems( );
+        List<BreadcrumbAccordionConfigItem> listBreadcrumbAccordionConfigItem = new ArrayList<>( breadcrumbAccordionConfig.getItems( ) );
 
         Collections.sort( listBreadcrumbAccordionConfigItem, _breadcrumbAccordionConfigItemComparator );
 
@@ -117,6 +136,7 @@ public class BreadcrumbAccordionService implements IBreadcrumbAccordionService
     public void create( BreadcrumbAccordionConfig breadcrumbAccordionConfig )
     {
         _breadcrumbAccordionDAO.insert( breadcrumbAccordionConfig );
+        _formsCacheService.remove( BREADCRUMB_ACCORDION_CONFIG_CACHE_KEY + breadcrumbAccordionConfig.getIdForm( ) );
     }
 
     /**
@@ -126,6 +146,7 @@ public class BreadcrumbAccordionService implements IBreadcrumbAccordionService
     public void removeByIdForm( int nIdForm )
     {
         _breadcrumbAccordionDAO.deleteByIdForm( nIdForm );
+        _formsCacheService.remove( BREADCRUMB_ACCORDION_CONFIG_CACHE_KEY + nIdForm );
     }
 
     /**
