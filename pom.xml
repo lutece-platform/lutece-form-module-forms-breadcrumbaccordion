@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>module-forms-breadcrumbaccordion</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.0.7-beta-01</version>
+    <version>1.0.7-SNAPSHOT</version>
 
     <name>Lutece forms breadcrumb accordion module</name>
 
