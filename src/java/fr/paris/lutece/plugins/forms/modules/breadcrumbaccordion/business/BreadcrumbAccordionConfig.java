@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +41,10 @@ import java.util.List;
  * This class represents a configuration for a breadcrumb accordion
  *
  */
-public class BreadcrumbAccordionConfig
+public class BreadcrumbAccordionConfig implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
 
     private int _nIdForm;
     private String _strFormTitle;

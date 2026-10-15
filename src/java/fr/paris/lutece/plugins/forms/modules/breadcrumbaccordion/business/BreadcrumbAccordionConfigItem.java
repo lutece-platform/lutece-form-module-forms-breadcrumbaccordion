@@ -33,14 +33,17 @@
  */
 package fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business;
 
+import java.io.Serializable;
 import fr.paris.lutece.plugins.forms.business.Step;
 
 /**
  * This class represents a configuration item for a breadcrumb accordion
  *
  */
-public class BreadcrumbAccordionConfigItem
+public class BreadcrumbAccordionConfigItem implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
 
     private int _nIdStep;
     private int _nPosition;
