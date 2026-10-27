@@ -34,6 +34,7 @@
 package fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.web;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -176,6 +177,8 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
 
             listBreadcrumbAccordionConfigItemDisplay.add( new BreadcrumbAccordionConfigItemDisplay( breadcrumbAccordionConfigItem, step ) );
         }
+
+        listBreadcrumbAccordionConfigItemDisplay.sort( Comparator.comparingInt( item -> item.getConfigItem( ).getPosition( ) ) );
 
         return listBreadcrumbAccordionConfigItemDisplay;
     }
