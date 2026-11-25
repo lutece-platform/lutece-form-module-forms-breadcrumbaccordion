@@ -3,7 +3,7 @@
 	<#list list_step_completed as stepDisplay>
 		<#assign cStep = stepDisplay.step />
 		<#assign cStepTitle = cStep.title />
-		<@cStepDone step=cStep.id title=cStepTitle! idx=stepDisplay?index actionLabel='#i18n{module.forms.breadcrumbaccordion.xpage.step.button.modify}' >
+		<@cStepDone step=stepDisplay?index+1 title=cStepTitle! idx=stepDisplay?index actionLabel='#i18n{module.forms.breadcrumbaccordion.xpage.step.button.modify}' >
 		<#list stepDisplay.questionHtml as questionHtml>
 			${questionHtml}
 		</#list>

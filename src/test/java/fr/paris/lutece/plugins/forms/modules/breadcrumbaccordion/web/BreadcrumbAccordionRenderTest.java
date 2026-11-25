@@ -72,7 +72,7 @@ public class BreadcrumbAccordionRenderTest
     /** Stand-ins of the core macros the templates call: they write the title as the core macros do, ${title}. */
     private static final String MACROS = "breadcrumbaccordion_test_macros.ftl";
     private static final String MACROS_SOURCE = "<#macro cTpl rest...><#nested></#macro>"
-            + "<#macro cStepDone step title idx rest...><h2>${title}</h2><#nested></#macro>"
+            + "<#macro cStepDone step title idx rest...><h2 data-step=\"${step}\" data-idx=\"${idx}\">${title}</h2><#nested></#macro>"
             + "<#macro cStepNext step title rest...><h2>${title}</h2></#macro>"
             + "<#macro tform rest...><form><#nested></form></#macro><#macro div rest...><div><#nested></div></#macro>"
             + "<#macro box class='' rest...><div class=\"card ${class}\"><#nested></div></#macro>"
@@ -167,6 +167,30 @@ public class BreadcrumbAccordionRenderTest
         assertTrue( strHtml.contains( QUESTION_HTML ), strHtml );
         assertTrue( strHtml.contains( TITLE_ESCAPED ), strHtml );
         assertFalse( strHtml.contains( "<b>" ), strHtml );
+    }
+
+    /**
+     * A completed step is announced with its number in the form (1, 2...), not with the database id of the step
+     * (cStepDone: « Etape {0} réalisée »).
+     *
+     * @throws Exception
+     *             if the rendering fails
+     */
+    @Test
+    public void testCompletedStepsAreNumberedInOrder( ) throws Exception
+    {
+        Step first = step( );
+        first.setId( 41 );
+        Step second = step( );
+        second.setId( 42 );
+        Map<String, Object> model = new HashMap<>( );
+        model.put( "list_step_completed", List.of( new StepDisplay( first ), new StepDisplay( second ) ) );
+
+        String strHtml = render( TEMPLATE_TOP, model );
+
+        assertTrue( strHtml.contains( "data-step=\"1\" data-idx=\"0\"" ), strHtml );
+        assertTrue( strHtml.contains( "data-step=\"2\" data-idx=\"1\"" ), strHtml );
+        assertFalse( strHtml.contains( "data-step=\"41\"" ), strHtml );
     }
 
     /**
