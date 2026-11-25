@@ -170,7 +170,7 @@ public class BreadcrumbAccordion implements IBreadcrumb
         } else {
             List<Step> listStepToComplete = _breadcrumbAccordionService.findStepsToComplete(stepCurrent.getIdForm());
             List<Step> listNotCompletedStep = findNotCompletedSteps(formResponseManager.getValidatedSteps(), listStepToComplete);
-            int nCurrentStepIndex = listStepToComplete.size() - listNotCompletedStep.size();
+            int nCurrentStepIndex = currentStepIndex( stepCurrent, formResponseManager.getValidatedSteps( ), listStepToComplete, listNotCompletedStep );
 
             model.put(MARK_CURRENT_STEP_INDEX, nCurrentStepIndex);
         }
@@ -193,7 +193,7 @@ public class BreadcrumbAccordion implements IBreadcrumb
         } else {
             listStepToComplete = _breadcrumbAccordionService.findStepsToComplete(stepCurrent.getIdForm());
             listNotCompletedStep = findNotCompletedSteps(formResponseManager.getValidatedSteps(), listStepToComplete);
-            nCurrentStepIndex = listStepToComplete.size() - listNotCompletedStep.size();
+            nCurrentStepIndex = currentStepIndex( stepCurrent, formResponseManager.getValidatedSteps( ), listStepToComplete, listNotCompletedStep );
         }
         Map<String, Object> model = new HashMap<>( );
         model.put( MARK_LIST_STEP_TO_COMPLETE, listNotCompletedStep );
@@ -205,6 +205,29 @@ public class BreadcrumbAccordion implements IBreadcrumb
     }
 
     /**
+     * Number of the current step in the accordion
+     * 
+     * @param stepCurrent
+     *            the current step
+     * @param listStepValidated
+     *            the validated steps (the current one last)
+     * @param listStepToComplete
+     *            the steps of the configuration
+     * @param listNotCompletedStep
+     *            the steps of the configuration still to complete
+     * @return the number of the current step
+     */
+    static int currentStepIndex( Step stepCurrent, List<Step> listStepValidated, List<Step> listStepToComplete, List<Step> listNotCompletedStep )
+    {
+        int nIndexInConfiguration = listStepToComplete.size( ) - listNotCompletedStep.size( );
+        // a step out of the configuration (not ticked, or created afterwards) is not counted above: the current step
+        // comes at least after the steps already validated, which the accordion shows above it (the validated steps
+        // end with the current one)
+        int nValidated = listStepValidated == null ? 0 : listStepValidated.size( );
+        return Math.max( nIndexInConfiguration, nValidated );
+    }
+
+    /**
      * Finds the not completed steps
      * 
      * @param listStepValidated
@@ -213,7 +236,7 @@ public class BreadcrumbAccordion implements IBreadcrumb
      *            the list of steps to complete
      * @return the not completed steps
      */
-    private List<Step> findNotCompletedSteps( List<Step> listStepValidated, List<Step> listStepToComplete )
+    static List<Step> findNotCompletedSteps( List<Step> listStepValidated, List<Step> listStepToComplete )
     {
         List<Step> listNotCompletedStep = new ArrayList<>( );
 
