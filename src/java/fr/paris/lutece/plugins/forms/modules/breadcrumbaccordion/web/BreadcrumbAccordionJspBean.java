@@ -46,16 +46,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import fr.paris.lutece.plugins.forms.business.Form;
+import fr.paris.lutece.plugins.forms.business.FormHome;
 import fr.paris.lutece.plugins.forms.business.Step;
 import fr.paris.lutece.plugins.forms.business.StepHome;
 import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.BreadcrumbAccordionConfig;
 import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.business.BreadcrumbAccordionConfigItem;
 import fr.paris.lutece.plugins.forms.modules.breadcrumbaccordion.service.IBreadcrumbAccordionService;
 import fr.paris.lutece.plugins.genericattributes.service.entrytype.IEntryTypeService;
+import fr.paris.lutece.api.user.User;
+import fr.paris.lutece.portal.business.user.AdminUser;
+import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
@@ -126,7 +132,16 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
     {
 
         Map<String, Object> model = getModel( );
-        model.put( MARK_LIST_BREADCRUMB, _breadcrumbAccordionService.findBreadcrumbAccordionConfigList( ) );
+        List<BreadcrumbAccordionConfig> listConfig = new ArrayList<>( );
+        for ( BreadcrumbAccordionConfig config : _breadcrumbAccordionService.findBreadcrumbAccordionConfigList( ) )
+        {
+            // only the forms the administrator may see (workgroup of the form, as the forms list)
+            if ( isFormAuthorized( FormHome.findByPrimaryKey( config.getIdForm( ) ), getUser( ) ) )
+            {
+                listConfig.add( config );
+            }
+        }
+        model.put( MARK_LIST_BREADCRUMB, listConfig );
 
         setPageTitleProperty( MESSAGE_MANAGE_BREADCRUMB_ACCORDION_PAGE_TITLE );
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_MANAGE_BREADCRUMBS, getLocale( ), model );
@@ -142,9 +157,10 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
      * @return the page
      */
     @View( value = VIEW_MODIFY_BREADCRUMB, securityTokenAction = ACTION_SAVE_CONFIG )
-    public String getModifyBreadcrumb( HttpServletRequest request )
+    public String getModifyBreadcrumb( HttpServletRequest request ) throws AccessDeniedException
     {
         int nIdForm = NumberUtils.toInt( request.getParameter( PARAMETER_ID_FORM ) );
+        checkFormAuthorized( nIdForm );
 
         Map<String, Object> model = getModel( );
 
@@ -222,9 +238,10 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
      * @return The Jsp URL of the process result
      */
     @Action( ACTION_SAVE_CONFIG )
-    public String doSaveConfig( HttpServletRequest request )
+    public String doSaveConfig( HttpServletRequest request ) throws AccessDeniedException
     {
         int nIdForm = NumberUtils.toInt( request.getParameter( PARAMETER_ID_FORM ) );
+        checkFormAuthorized( nIdForm );
         String [ ] listIdStep = request.getParameterValues( PARAMETER_ID_STEP );
         String [ ] listStepToComplete = request.getParameterValues( PARAMETER_STEP_TO_COMPLETE );
         String [ ] listPosition = request.getParameterValues( PARAMETER_POSITION );
@@ -359,6 +376,37 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
     public String doCancel( HttpServletRequest request )
     {
         return getManageBreadcrumbs( request );
+    }
+
+    /**
+     * Refuses a form the administrator may not see (workgroup of the form)
+     * 
+     * @param nIdForm
+     *            the form id
+     * @throws AccessDeniedException
+     *             if the form does not exist or belongs to another workgroup
+     */
+    private void checkFormAuthorized( int nIdForm ) throws AccessDeniedException
+    {
+        if ( !isFormAuthorized( FormHome.findByPrimaryKey( nIdForm ), getUser( ) ) )
+        {
+            throw new AccessDeniedException( "Form " + nIdForm + " not authorized for the accordion configuration" );
+        }
+    }
+
+    /**
+     * Tells whether the administrator may configure the accordion of a form: the form exists and belongs to one of his
+     * workgroups (or to all)
+     * 
+     * @param form
+     *            the form, may be null
+     * @param user
+     *            the administrator
+     * @return true when authorized
+     */
+    static boolean isFormAuthorized( Form form, AdminUser user )
+    {
+        return form != null && AdminWorkgroupService.isAuthorized( form, (User) user );
     }
 
     /**
