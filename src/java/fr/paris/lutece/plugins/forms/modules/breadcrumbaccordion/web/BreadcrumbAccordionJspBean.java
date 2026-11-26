@@ -252,26 +252,18 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
 
         if ( listStepToComplete != null && listStepToComplete.length > 0 )
         {
-            List<Integer> listSelectedStepIndex = findSelectedStepIndexes( listStepToComplete, listIdStep );
+            List<BreadcrumbAccordionConfigItem> listItems = buildConfigItems( listIdStep, listStepToComplete, listPosition );
 
-            if ( !validatePositions( listSelectedStepIndex, listPosition ) )
+            if ( listItems == null )
             {
                 Object [ ] listMessageParameters = {
                     I18nService.getLocalizedString( FIELD_POSITION, request.getLocale( ) ),
                 };
-                redirect( request,
+                return redirect( request,
                         AdminMessageService.getMessageUrl( request, IEntryTypeService.MESSAGE_NUMERIC_FIELD, listMessageParameters, AdminMessage.TYPE_STOP ) );
             }
 
-            for ( int nPosition : listSelectedStepIndex )
-            {
-                BreadcrumbAccordionConfigItem breadcrumbAccordionConfigItem = new BreadcrumbAccordionConfigItem( );
-
-                breadcrumbAccordionConfigItem.setIdStep( Integer.parseInt( listIdStep [nPosition] ) );
-                breadcrumbAccordionConfigItem.setPosition( Integer.parseInt( listPosition [nPosition] ) );
-
-                breadcrumbAccordionConfig.add( breadcrumbAccordionConfigItem );
-            }
+            listItems.forEach( breadcrumbAccordionConfig::add );
 
             _breadcrumbAccordionService.create( breadcrumbAccordionConfig );
         }
@@ -283,6 +275,50 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
     }
 
     /**
+     * Builds the configuration items of the selected steps
+     * 
+     * @param listIdStep
+     *            the ids of the steps of the form
+     * @param listStepToComplete
+     *            the ids of the selected steps
+     * @param listPosition
+     *            the positions, in the order of listIdStep
+     * @return the items, or null when a selected step has an id or a position that is not a number
+     */
+    static List<BreadcrumbAccordionConfigItem> buildConfigItems( String [ ] listIdStep, String [ ] listStepToComplete, String [ ] listPosition )
+    {
+        if ( listIdStep == null || listPosition == null )
+        {
+            return null;
+        }
+        List<BreadcrumbAccordionConfigItem> listItems = new ArrayList<>( );
+
+        for ( int nIndex : findSelectedStepIndexes( listStepToComplete, listIdStep ) )
+        {
+            if ( nIndex >= listPosition.length || !isNumber( listIdStep [nIndex] ) || !isNumber( listPosition [nIndex] ) )
+            {
+                return null;
+            }
+            BreadcrumbAccordionConfigItem item = new BreadcrumbAccordionConfigItem( );
+            item.setIdStep( Integer.parseInt( listIdStep [nIndex].trim( ) ) );
+            item.setPosition( Integer.parseInt( listPosition [nIndex].trim( ) ) );
+            listItems.add( item );
+        }
+
+        return listItems;
+    }
+
+    /**
+     * @param strValue
+     *            a value posted by the form
+     * @return true if the value is an integer
+     */
+    private static boolean isNumber( String strValue )
+    {
+        return StringUtils.isNotBlank( strValue ) && strValue.trim( ).matches( "-?\\d{1,9}" );
+    }
+
+    /**
      * Finds the indexes of the selected steps
      * 
      * @param listStepToComplete
@@ -291,7 +327,7 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
      *            the list of step ids
      * @return the positions of the selected steps
      */
-    private List<Integer> findSelectedStepIndexes( String [ ] listStepToComplete, String... listIdStep )
+    private static List<Integer> findSelectedStepIndexes( String [ ] listStepToComplete, String... listIdStep )
     {
         List<Integer> listPositions = new ArrayList<>( );
 
@@ -310,59 +346,6 @@ public class BreadcrumbAccordionJspBean extends MVCAdminJspBean
         }
 
         return listPositions;
-    }
-
-    /**
-     * Validates the positions
-     * 
-     * @param listSelectedStepIndex
-     *            the indexes of the selected steps
-     * @param listPosition
-     *            the list of positions
-     * @return {@code true} if the positions are valid, {@code false} otherwise
-     */
-    private boolean validatePositions( List<Integer> listSelectedStepIndex, String... listPosition )
-    {
-        boolean bIsValid = true;
-
-        for ( int nPosition : listSelectedStepIndex )
-        {
-            if ( !validatePosition( listPosition [nPosition] ) )
-            {
-                bIsValid = false;
-                break;
-            }
-        }
-
-        return bIsValid;
-    }
-
-    /**
-     * Validates the specified position
-     * 
-     * @param position
-     *            the position to validate
-     * @return {@code true} if the position is valid, {@code false} otherwise
-     */
-    private boolean validatePosition( String position )
-    {
-        if ( StringUtils.isNotEmpty( position ) )
-        {
-            try
-            {
-                Integer.parseInt( position );
-            }
-            catch( NumberFormatException e )
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
-
-        return true;
     }
 
     /**
